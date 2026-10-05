@@ -5,9 +5,7 @@ public class BarangNonElektronik extends BarangTertinggal {
     private String warna;
     private String jenisBarang;
 
-    public BarangNonElektronik(String namaBarang, String lokasiDitemukan,
-                               String tanggalDitemukan, String status,
-                               String warna, String jenisBarang) {
+    public BarangNonElektronik(String namaBarang, String lokasiDitemukan, String tanggalDitemukan, int status, String warna, String jenisBarang) {
 
         super(namaBarang, lokasiDitemukan, tanggalDitemukan, status);
 
@@ -33,11 +31,9 @@ public class BarangNonElektronik extends BarangTertinggal {
 
     @Override
     public void tampilkanInfo() {
-
+        System.out.println("=== Barang Non-Elektronik ===");
         super.tampilkanInfo();
-
         System.out.println("Warna             : " + this.warna);
         System.out.println("Jenis Barang      : " + this.jenisBarang);
-        System.out.println("Kategori          : Non-Elektronik");
     }
 }
