@@ -5,16 +5,16 @@ public class BarangTertinggal {
     private String namaBarang;
     private String lokasiDitemukan;
     private String tanggalDitemukan;
-    private String status;
+    private int status;
 
     private static int jumlahBarang = 0;
 
-    public BarangTertinggal(String namaBarang, String lokasiDitemukan, String tanggalDitemukan, String status) {
+    public BarangTertinggal(String namaBarang, String lokasiDitemukan, String tanggalDitemukan, int status) {
 
         this.namaBarang = namaBarang;
         this.lokasiDitemukan = lokasiDitemukan;
-        this.tanggalDitemukan =tanggalDitemukan;
-        this.status = status;
+        this.tanggalDitemukan = tanggalDitemukan;
+        this.setStatus(status);
 
         jumlahBarang++;
     }
@@ -31,7 +31,7 @@ public class BarangTertinggal {
         return this.tanggalDitemukan;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return this.status;
     }
 
@@ -47,16 +47,11 @@ public class BarangTertinggal {
         this.tanggalDitemukan = tanggalDitemukan;
     }
 
-    public void setStatus(String status) {
-
-        if (status.equalsIgnoreCase("Belum Diklaim")) {
-            this.status = "Belum Diklaim";
-
-        } else if (status.equalsIgnoreCase("Sudah Dikembalikan")) {
-            this.status = "Sudah Dikembalikan";
-
+    public void setStatus(int status) {
+        if (status == 1 || status == 2) {
+            this.status = status;
         } else {
-            this.status = "Belum Diklaim";
+            this.status = 1;
         }
     }
 
@@ -65,10 +60,14 @@ public class BarangTertinggal {
     }
 
     public void tampilkanInfo() {
-
         System.out.println("Nama Barang       : " + this.namaBarang);
         System.out.println("Lokasi Ditemukan  : " + this.lokasiDitemukan);
         System.out.println("Tanggal Ditemukan : " + this.tanggalDitemukan);
-        System.out.println("Status            : " + this.status);
+
+        if (this.status == 1) {
+            System.out.println("Status            : Belum Diklaim");
+        } else {
+            System.out.println("Status            : Sudah Dikembalikan");
+        }
     }
 }
