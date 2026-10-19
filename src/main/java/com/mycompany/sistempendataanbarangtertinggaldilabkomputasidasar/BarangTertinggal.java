@@ -1,6 +1,6 @@
 package com.mycompany.sistempendataanbarangtertinggaldilabkomputasidasar;
 
-public class BarangTertinggal {
+public abstract class BarangTertinggal {
 
     private String namaBarang;
     private String lokasiDitemukan;
@@ -9,13 +9,12 @@ public class BarangTertinggal {
 
     private static int jumlahBarang = 0;
 
-    public BarangTertinggal(String namaBarang, String lokasiDitemukan, String tanggalDitemukan, int status) {
-
+    public BarangTertinggal(String namaBarang, String lokasiDitemukan,
+                            String tanggalDitemukan, int status) {
         this.namaBarang = namaBarang;
         this.lokasiDitemukan = lokasiDitemukan;
         this.tanggalDitemukan = tanggalDitemukan;
         this.setStatus(status);
-
         jumlahBarang++;
     }
 
@@ -70,4 +69,6 @@ public class BarangTertinggal {
             System.out.println("Status            : Sudah Dikembalikan");
         }
     }
+
+    public abstract void prosesBarang();
 }

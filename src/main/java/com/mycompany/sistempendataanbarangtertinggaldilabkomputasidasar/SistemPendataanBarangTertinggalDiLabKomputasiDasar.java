@@ -4,8 +4,8 @@ import java.util.Scanner;
 
 public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
 
-    public static void cariBarang(String namaBarang, BarangTertinggal[] daftarBarang, int jumlahBarang) {
-        System.out.println("\nMencari barang dengan Nama: " + namaBarang);
+    public static void cariBarang(String namaBarang,
+            BarangTertinggal[] daftarBarang, int jumlahBarang) {
 
         boolean ditemukan = false;
 
@@ -21,16 +21,8 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
         }
     }
 
-    public static void cariBarang(int status, BarangTertinggal[] daftarBarang, int jumlahBarang) {
-        String statusCari;
-
-        if (status == 1) {
-            statusCari = "Belum Diklaim";
-        } else {
-            statusCari = "Sudah Dikembalikan";
-        }
-
-        System.out.println("\nMencari barang dengan Status: " + statusCari);
+    public static void cariBarang(int status,
+            BarangTertinggal[] daftarBarang, int jumlahBarang) {
 
         boolean ditemukan = false;
 
@@ -46,14 +38,9 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
         }
     }
 
-    public static void prosesBarang(BarangTertinggal barang) {
-        System.out.println("\n=== Proses Pengembalian Barang ===");
-        barang.tampilkanInfo();
-        barang.setStatus(2);
-        System.out.println("\nBarang berhasil diproses untuk dikembalikan.");
-    }
+    public static void tandaiDikembalikan(String namaBarang,
+            BarangTertinggal[] daftarBarang, int jumlahBarang) {
 
-    public static void tandaiDikembalikan(String namaBarang, BarangTertinggal[] daftarBarang, int jumlahBarang) {
         boolean ditemukan = false;
 
         for (int i = 0; i < jumlahBarang; i++) {
@@ -66,6 +53,23 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
 
         if (!ditemukan) {
             System.out.println("Barang tidak ditemukan.");
+        }
+    }
+
+    public static void jalankanProsesBarang(BarangTertinggal barang) {
+
+        System.out.println("\n=== PROSES BARANG ===");
+
+        barang.prosesBarang();
+
+        if (barang instanceof DapatDikembalikan) {
+            DapatDikembalikan barangKembali = (DapatDikembalikan) barang;
+            barangKembali.prosesPengembalian();
+        }
+
+        if (barang instanceof DapatDiverifikasi) {
+            DapatDiverifikasi barangVerifikasi = (DapatDiverifikasi) barang;
+            barangVerifikasi.verifikasiBarang();
         }
     }
 
@@ -90,7 +94,7 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
             System.out.println("2. Lihat Daftar Barang");
             System.out.println("3. Cari Barang");
             System.out.println("4. Tandai Barang Dikembalikan");
-            System.out.println("5. Proses Pengembalian Barang");
+            System.out.println("5. Proses Barang");
             System.out.println("6. Keluar");
             System.out.print("Pilih Menu: ");
 
@@ -100,7 +104,6 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
             switch (pilihan) {
 
                 case 1:
-
                     if (jumlahBarang < daftarBarang.length) {
 
                         System.out.println("\n-- Pilih Jenis Barang --");
@@ -112,7 +115,7 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
                         int jenis = scanner.nextInt();
                         scanner.nextLine();
 
-                        if (jenis == 1 || jenis == 2 || jenis == 3) {
+                        if (jenis >= 1 && jenis <= 3) {
 
                             System.out.print("Masukkan Nama Barang: ");
                             String namaBarang = scanner.nextLine();
@@ -128,18 +131,13 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
                             System.out.println("2. Sudah Dikembalikan");
                             System.out.print("Pilihan: ");
 
-                            int pilihanStatus = scanner.nextInt();
+                            int status = scanner.nextInt();
                             scanner.nextLine();
 
-                            int status;
-
-                            if (pilihanStatus == 1) {
+                            if (status != 1 && status != 2) {
                                 status = 1;
-                            } else if (pilihanStatus == 2) {
-                                status = 2;
-                            } else {
-                                status = 1;
-                                System.out.println("Pilihan status tidak valid.");
+                                System.out.println("Status tidak valid. "
+                                        + "Status diatur menjadi Belum Diklaim.");
                             }
 
                             if (jenis == 1) {
@@ -151,13 +149,8 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
                                 String kondisi = scanner.nextLine();
 
                                 daftarBarang[jumlahBarang] = new BarangElektronik(
-                                        namaBarang,
-                                        lokasiDitemukan,
-                                        tanggalDitemukan,
-                                        status,
-                                        merek,
-                                        kondisi
-                                );
+                                        namaBarang, lokasiDitemukan,
+                                        tanggalDitemukan, status, merek, kondisi);
 
                             } else if (jenis == 2) {
 
@@ -168,13 +161,8 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
                                 String jenisBarang = scanner.nextLine();
 
                                 daftarBarang[jumlahBarang] = new BarangNonElektronik(
-                                        namaBarang,
-                                        lokasiDitemukan,
-                                        tanggalDitemukan,
-                                        status,
-                                        warna,
-                                        jenisBarang
-                                );
+                                        namaBarang, lokasiDitemukan,
+                                        tanggalDitemukan, status, warna, jenisBarang);
 
                             } else {
 
@@ -185,18 +173,13 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
                                 String namaPemilik = scanner.nextLine();
 
                                 daftarBarang[jumlahBarang] = new BarangDokumen(
-                                        namaBarang,
-                                        lokasiDitemukan,
-                                        tanggalDitemukan,
-                                        status,
-                                        jenisDokumen,
-                                        namaPemilik
-                                );
+                                        namaBarang, lokasiDitemukan,
+                                        tanggalDitemukan, status,
+                                        jenisDokumen, namaPemilik);
                             }
 
                             jumlahBarang++;
-
-                            System.out.println("\nBarang berhasil ditambahkan.");
+                            System.out.println("Barang berhasil ditambahkan.");
 
                         } else {
                             System.out.println("Pilihan jenis barang tidak valid.");
@@ -205,53 +188,41 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
                     } else {
                         System.out.println("Kapasitas data barang sudah penuh.");
                     }
-
                     break;
 
                 case 2:
-
                     System.out.println("\n=== DAFTAR BARANG TERTINGGAL ===");
 
                     if (jumlahBarang == 0) {
-
                         System.out.println("Belum ada barang yang tersimpan.");
-
                     } else {
-
                         for (int i = 0; i < jumlahBarang; i++) {
-
                             System.out.println("\nData Barang ke-" + (i + 1));
-
                             daftarBarang[i].tampilkanInfo();
-
                             System.out.println("----------------------------------------");
                         }
 
                         System.out.println("Total Barang: "
                                 + BarangTertinggal.getJumlahBarang());
                     }
-
                     break;
 
                 case 3:
-
                     System.out.println("\n=== CARI BARANG ===");
-                    System.out.println("1. Cari berdasarkan Nama");
-                    System.out.println("2. Cari berdasarkan Status");
+                    System.out.println("1. Berdasarkan Nama");
+                    System.out.println("2. Berdasarkan Status");
                     System.out.print("Pilih: ");
 
                     int modeCari = scanner.nextInt();
                     scanner.nextLine();
 
                     if (modeCari == 1) {
-
                         System.out.print("Masukkan Nama Barang: ");
                         String namaCari = scanner.nextLine();
 
                         cariBarang(namaCari, daftarBarang, jumlahBarang);
 
                     } else if (modeCari == 2) {
-
                         System.out.println("1. Belum Diklaim");
                         System.out.println("2. Sudah Dikembalikan");
                         System.out.print("Pilih Status: ");
@@ -259,42 +230,33 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
                         int statusCari = scanner.nextInt();
                         scanner.nextLine();
 
-                        cariBarang(statusCari, daftarBarang, jumlahBarang);
+                        if (statusCari == 1 || statusCari == 2) {
+                            cariBarang(statusCari, daftarBarang, jumlahBarang);
+                        } else {
+                            System.out.println("Pilihan status tidak valid.");
+                        }
 
                     } else {
-
                         System.out.println("Pilihan tidak valid.");
                     }
-
                     break;
 
                 case 4:
-
                     System.out.println("\n=== TANDAI BARANG DIKEMBALIKAN ===");
-
                     System.out.print("Masukkan Nama Barang: ");
-                    String namaBarang = scanner.nextLine();
+
+                    String namaKembali = scanner.nextLine();
 
                     tandaiDikembalikan(
-                            namaBarang,
-                            daftarBarang,
-                            jumlahBarang
-                    );
-
+                            namaKembali, daftarBarang, jumlahBarang);
                     break;
 
                 case 5:
-
-                    System.out.println("\n=== PROSES PENGEMBALIAN BARANG ===");
+                    System.out.println("\n=== PILIH BARANG UNTUK DIPROSES ===");
 
                     if (jumlahBarang == 0) {
-
                         System.out.println("Belum ada barang yang tersimpan.");
-
                     } else {
-
-                        System.out.println("Daftar Barang:");
-
                         for (int i = 0; i < jumlahBarang; i++) {
                             System.out.println((i + 1) + ". "
                                     + daftarBarang[i].getNamaBarang());
@@ -305,27 +267,20 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
                         scanner.nextLine();
 
                         if (nomorBarang >= 1 && nomorBarang <= jumlahBarang) {
-
-                            prosesBarang(daftarBarang[nomorBarang - 1]);
-
+                            jalankanProsesBarang(daftarBarang[nomorBarang - 1]);
                         } else {
-
                             System.out.println("Nomor barang tidak valid.");
                         }
                     }
-
                     break;
 
                 case 6:
-
-                    System.out.println("\nTerima kasih telah menggunakan sistem.");
+                    System.out.println("Terima kasih telah menggunakan sistem.");
                     isRunning = false;
-
                     break;
 
                 default:
-
-                    System.out.println("Pilihan tidak valid. Silakan pilih 1-6.");
+                    System.out.println("Pilihan tidak valid. Masukkan angka 1-6.");
             }
         }
 

@@ -1,14 +1,14 @@
 package com.mycompany.sistempendataanbarangtertinggaldilabkomputasidasar;
 
-public class BarangDokumen extends BarangTertinggal {
+public class BarangDokumen extends BarangTertinggal implements DapatDiverifikasi {
 
     private String jenisDokumen;
     private String namaPemilik;
 
-    public BarangDokumen(String namaBarang, String lokasiDitemukan, String tanggalDitemukan, int status, String jenisDokumen, String namaPemilik) {
-
+    public BarangDokumen(String namaBarang, String lokasiDitemukan,
+                         String tanggalDitemukan, int status,
+                         String jenisDokumen, String namaPemilik) {
         super(namaBarang, lokasiDitemukan, tanggalDitemukan, status);
-
         this.jenisDokumen = jenisDokumen;
         this.namaPemilik = namaPemilik;
     }
@@ -35,5 +35,17 @@ public class BarangDokumen extends BarangTertinggal {
         super.tampilkanInfo();
         System.out.println("Jenis Dokumen     : " + this.jenisDokumen);
         System.out.println("Nama Pemilik      : " + this.namaPemilik);
+    }
+
+    @Override
+    public void prosesBarang() {
+        System.out.println("Proses barang dokumen: pemeriksaan dokumen dan informasi pemilik.");
+    }
+
+    @Override
+    public void verifikasiBarang() {
+        System.out.println("Verifikasi dokumen dilakukan.");
+        System.out.println("Jenis Dokumen: " + this.jenisDokumen);
+        System.out.println("Nama Pemilik: " + this.namaPemilik);
     }
 }

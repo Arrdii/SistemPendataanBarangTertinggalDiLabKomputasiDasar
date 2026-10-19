@@ -1,14 +1,14 @@
 package com.mycompany.sistempendataanbarangtertinggaldilabkomputasidasar;
 
-public class BarangElektronik extends BarangTertinggal {
+public class BarangElektronik extends BarangTertinggal implements DapatDikembalikan{
 
     private String merek;
     private String kondisi;
 
-    public BarangElektronik(String namaBarang, String lokasiDitemukan, String tanggalDitemukan, int status, String merek, String kondisi) {
-
+    public BarangElektronik(String namaBarang, String lokasiDitemukan,
+                            String tanggalDitemukan, int status,
+                            String merek, String kondisi) {
         super(namaBarang, lokasiDitemukan, tanggalDitemukan, status);
-
         this.merek = merek;
         this.kondisi = kondisi;
     }
@@ -35,5 +35,17 @@ public class BarangElektronik extends BarangTertinggal {
         super.tampilkanInfo();
         System.out.println("Merek             : " + this.merek);
         System.out.println("Kondisi           : " + this.kondisi);
+    }
+
+    @Override
+    public void prosesBarang() {
+        System.out.println("Proses barang elektronik: pemeriksaan merek dan kondisi.");
+    }
+
+    @Override
+    public void prosesPengembalian() {
+        System.out.println("Pengembalian barang elektronik sedang diproses.");
+        this.setStatus(2);
+        System.out.println("Status barang menjadi Sudah Dikembalikan.");
     }
 }
