@@ -1,289 +1,347 @@
 package com.mycompany.sistempendataanbarangtertinggaldilabkomputasidasar;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
 
-    public static void cariBarang(String namaBarang,
-            BarangTertinggal[] daftarBarang, int jumlahBarang) {
+    static Scanner input = new Scanner(System.in);
 
-        boolean ditemukan = false;
+    static ArrayList<BarangTertinggal> daftarBarang = new ArrayList<>();
 
-        for (int i = 0; i < jumlahBarang; i++) {
-            if (daftarBarang[i].getNamaBarang().equalsIgnoreCase(namaBarang)) {
-                daftarBarang[i].tampilkanInfo();
-                ditemukan = true;
-            }
-        }
+    static HashMap<String, String> dataPetugas = new HashMap<>();
 
-        if (!ditemukan) {
-            System.out.println("Barang tidak ditemukan.");
-        }
-    }
 
-    public static void cariBarang(int status,
-            BarangTertinggal[] daftarBarang, int jumlahBarang) {
+    public static void validasiInput(String data)
+            throws KoleksiBarangTidakDitemukanException {
 
-        boolean ditemukan = false;
-
-        for (int i = 0; i < jumlahBarang; i++) {
-            if (daftarBarang[i].getStatus() == status) {
-                daftarBarang[i].tampilkanInfo();
-                ditemukan = true;
-            }
-        }
-
-        if (!ditemukan) {
-            System.out.println("Barang tidak ditemukan.");
+        if (data == null || data.isEmpty()) {
+            throw new KoleksiBarangTidakDitemukanException(
+                    "Input tidak boleh kosong!");
         }
     }
 
-    public static void tandaiDikembalikan(String namaBarang,
-            BarangTertinggal[] daftarBarang, int jumlahBarang) {
+    // Menambahkan data barang
+    public static void tambahBarang(BarangTertinggal barang) {
+        daftarBarang.add(barang);
+        System.out.println("Barang berhasil ditambahkan!");
+    }
 
-        boolean ditemukan = false;
+    
+    public static void tampilkanBarang() {
 
-        for (int i = 0; i < jumlahBarang; i++) {
-            if (daftarBarang[i].getNamaBarang().equalsIgnoreCase(namaBarang)) {
-                daftarBarang[i].setStatus(2);
-                ditemukan = true;
-                System.out.println("Status barang berhasil diperbarui.");
+        if (daftarBarang.isEmpty()) {
+            System.out.println("Belum ada data barang.");
+            return;
+        }
+
+        System.out.println("\n===== DAFTAR BARANG TERTINGGAL =====");
+
+        for (int i = 0; i < daftarBarang.size(); i++) {
+            System.out.println("\nNomor Barang: " + (i + 1));
+            daftarBarang.get(i).tampilkanInfo();
+            System.out.println("--------------------------------");
+        }
+
+        System.out.println("Jumlah Barang: " + daftarBarang.size());
+    }
+
+    
+    public static BarangTertinggal cariBarang(String nama)
+            throws KoleksiBarangTidakDitemukanException {
+
+        validasiInput(nama);
+
+        for (int i = 0; i < daftarBarang.size(); i++) {
+
+            if (daftarBarang.get(i).getNamaBarang().equalsIgnoreCase(nama)) {
+                return daftarBarang.get(i);
             }
         }
 
-        if (!ditemukan) {
-            System.out.println("Barang tidak ditemukan.");
-        }
+        throw new KoleksiBarangTidakDitemukanException(
+                "Barang dengan nama " + nama + " tidak ditemukan!");
     }
 
+   
     public static void jalankanProsesBarang(BarangTertinggal barang) {
-
-        System.out.println("\n=== PROSES BARANG ===");
 
         barang.prosesBarang();
 
         if (barang instanceof DapatDikembalikan) {
-            DapatDikembalikan barangKembali = (DapatDikembalikan) barang;
-            barangKembali.prosesPengembalian();
+            DapatDikembalikan data = (DapatDikembalikan) barang;
+            data.prosesPengembalian();
         }
 
         if (barang instanceof DapatDiverifikasi) {
-            DapatDiverifikasi barangVerifikasi = (DapatDiverifikasi) barang;
-            barangVerifikasi.verifikasiBarang();
+            DapatDiverifikasi data = (DapatDiverifikasi) barang;
+            data.verifikasiBarang();
         }
+    }
+
+   
+    public static void menuPetugas() {
+
+        int pilihanPetugas = 0;
+
+        do {
+            try {
+                System.out.println("\n===== MENU DATA PETUGAS =====");
+                System.out.println("1. Tambah Petugas");
+                System.out.println("2. Cari Petugas");
+                System.out.println("3. Tampilkan Semua Petugas");
+                System.out.println("4. Kembali");
+                System.out.print("Pilih menu: ");
+
+                pilihanPetugas = input.nextInt();
+                input.nextLine();
+
+                switch (pilihanPetugas) {
+
+                    case 1:
+                        System.out.print("Masukkan NIP Petugas: ");
+                        String nip = input.nextLine();
+
+                        validasiInput(nip);
+
+                        if (dataPetugas.containsKey(nip)) {
+                            System.out.println("NIP sudah terdaftar!");
+                        } else {
+                            System.out.print("Masukkan Nama Petugas: ");
+                            String nama = input.nextLine();
+
+                            validasiInput(nama);
+
+                            dataPetugas.put(nip, nama);
+                            System.out.println("Petugas berhasil ditambahkan!");
+                        }
+                        break;
+
+                    case 2:
+                        System.out.print("Masukkan NIP yang dicari: ");
+                        String cariNip = input.nextLine();
+
+                        validasiInput(cariNip);
+
+                        if (dataPetugas.containsKey(cariNip)) {
+                            System.out.println("Nama Petugas: "
+                                    + dataPetugas.get(cariNip));
+                        } else {
+                            System.out.println("Petugas tidak ditemukan!");
+                        }
+                        break;
+
+                    case 3:
+                        if (dataPetugas.isEmpty()) {
+                            System.out.println("Belum ada data petugas.");
+                        } else {
+                            System.out.println("\n===== DATA SEMUA PETUGAS =====");
+
+                            for (String kunci : dataPetugas.keySet()) {
+                                System.out.println("NIP  : " + kunci);
+                                System.out.println("Nama : "
+                                        + dataPetugas.get(kunci));
+                                System.out.println("----------------------");
+                            }
+
+                            System.out.println("Jumlah Petugas: "
+                                    + dataPetugas.size());
+                        }
+                        break;
+
+                    case 4:
+                        System.out.println("Kembali ke menu utama.");
+                        break;
+
+                    default:
+                        System.out.println("Pilihan tidak tersedia.");
+                }
+
+            } catch (InputMismatchException e) {
+                System.out.println("Error: Masukkan angka untuk pilihan menu.");
+                input.nextLine();
+
+            } catch (KoleksiBarangTidakDitemukanException e) {
+                System.out.println("Error: " + e.getMessage());
+
+            } finally {
+                System.out.println("Proses menu petugas selesai.");
+            }
+
+        } while (pilihanPetugas != 4);
     }
 
     public static void main(String[] args) {
 
-        Scanner scanner = new Scanner(System.in);
+        // Data awal ArrayList: 3 objek barang
+        daftarBarang.add(new BarangElektronik(
+                "Laptop", "Lab Komputer 1", "01-11-2026",
+                1, "Asus", "Baik"));
 
-        BarangTertinggal[] daftarBarang = new BarangTertinggal[10];
+        daftarBarang.add(new BarangNonElektronik(
+                "Botol Minum", "Lab Komputer 2", "01-11-2026",
+                1, "Hitam", "Botol"));
 
-        int jumlahBarang = 0;
-        boolean isRunning = true;
+        daftarBarang.add(new BarangDokumen(
+                "Kartu Mahasiswa", "Lab Komputer 3", "02-11-2026",
+                1, "Kartu Identitas", "Mahasiswa"));
 
-        System.out.println("========================================");
-        System.out.println(" SISTEM PENDATAAN BARANG TERTINGGAL");
-        System.out.println("       LAB KOMPUTASI DASAR");
-        System.out.println("========================================");
+        // Data awal HashMap: 2 petugas
+        dataPetugas.put("PTG001", "Andi");
+        dataPetugas.put("PTG002", "Budi");
 
-        while (isRunning) {
+        int pilihan = 0;
 
-            System.out.println("\nMenu Utama:");
-            System.out.println("1. Tambah Barang");
-            System.out.println("2. Lihat Daftar Barang");
-            System.out.println("3. Cari Barang");
-            System.out.println("4. Tandai Barang Dikembalikan");
-            System.out.println("5. Proses Barang");
-            System.out.println("6. Keluar");
-            System.out.print("Pilih Menu: ");
+        try {
 
-            int pilihan = scanner.nextInt();
-            scanner.nextLine();
+            do {
+                try {
+                    System.out.println("\n==================================");
+                    System.out.println(" SISTEM PENDATAAN BARANG TERTINGGAL");
+                    System.out.println("       LAB KOMPUTASI DASAR");
+                    System.out.println("==================================");
+                    System.out.println("1. Tambah Barang");
+                    System.out.println("2. Tampilkan Semua Barang");
+                    System.out.println("3. Cari Barang");
+                    System.out.println("4. Proses Barang");
+                    System.out.println("5. Kelola Data Petugas");
+                    System.out.println("6. Keluar");
+                    System.out.print("Pilih menu: ");
 
-            switch (pilihan) {
+                    pilihan = input.nextInt();
+                    input.nextLine();
 
-                case 1:
-                    if (jumlahBarang < daftarBarang.length) {
+                    switch (pilihan) {
 
-                        System.out.println("\n-- Pilih Jenis Barang --");
-                        System.out.println("1. Barang Elektronik");
-                        System.out.println("2. Barang Non-Elektronik");
-                        System.out.println("3. Barang Dokumen");
-                        System.out.print("Pilihan: ");
+                        case 1:
+                            System.out.println("\nJenis Barang:");
+                            System.out.println("1. Elektronik");
+                            System.out.println("2. Non-Elektronik");
+                            System.out.println("3. Dokumen");
+                            System.out.print("Pilih jenis: ");
 
-                        int jenis = scanner.nextInt();
-                        scanner.nextLine();
+                            int jenis = input.nextInt();
+                            input.nextLine();
 
-                        if (jenis >= 1 && jenis <= 3) {
+                            System.out.print("Nama Barang: ");
+                            String nama = input.nextLine();
+                            validasiInput(nama);
 
-                            System.out.print("Masukkan Nama Barang: ");
-                            String namaBarang = scanner.nextLine();
+                            System.out.print("Lokasi Ditemukan: ");
+                            String lokasi = input.nextLine();
+                            validasiInput(lokasi);
 
-                            System.out.print("Masukkan Lokasi Ditemukan: ");
-                            String lokasiDitemukan = scanner.nextLine();
-
-                            System.out.print("Masukkan Tanggal Ditemukan: ");
-                            String tanggalDitemukan = scanner.nextLine();
-
-                            System.out.println("\n-- Status Barang --");
-                            System.out.println("1. Belum Diklaim");
-                            System.out.println("2. Sudah Dikembalikan");
-                            System.out.print("Pilihan: ");
-
-                            int status = scanner.nextInt();
-                            scanner.nextLine();
-
-                            if (status != 1 && status != 2) {
-                                status = 1;
-                                System.out.println("Status tidak valid. "
-                                        + "Status diatur menjadi Belum Diklaim.");
-                            }
+                            System.out.print("Tanggal Ditemukan: ");
+                            String tanggal = input.nextLine();
+                            validasiInput(tanggal);
 
                             if (jenis == 1) {
+                                System.out.print("Merek: ");
+                                String merek = input.nextLine();
+                                validasiInput(merek);
 
-                                System.out.print("Masukkan Merek: ");
-                                String merek = scanner.nextLine();
+                                System.out.print("Kondisi: ");
+                                String kondisi = input.nextLine();
+                                validasiInput(kondisi);
 
-                                System.out.print("Masukkan Kondisi: ");
-                                String kondisi = scanner.nextLine();
-
-                                daftarBarang[jumlahBarang] = new BarangElektronik(
-                                        namaBarang, lokasiDitemukan,
-                                        tanggalDitemukan, status, merek, kondisi);
+                                tambahBarang(new BarangElektronik(
+                                        nama, lokasi, tanggal, 1,
+                                        merek, kondisi));
 
                             } else if (jenis == 2) {
+                                System.out.print("Warna: ");
+                                String warna = input.nextLine();
+                                validasiInput(warna);
 
-                                System.out.print("Masukkan Warna: ");
-                                String warna = scanner.nextLine();
+                                System.out.print("Jenis Barang: ");
+                                String jenisBarang = input.nextLine();
+                                validasiInput(jenisBarang);
 
-                                System.out.print("Masukkan Jenis Barang: ");
-                                String jenisBarang = scanner.nextLine();
+                                tambahBarang(new BarangNonElektronik(
+                                        nama, lokasi, tanggal, 1,
+                                        warna, jenisBarang));
 
-                                daftarBarang[jumlahBarang] = new BarangNonElektronik(
-                                        namaBarang, lokasiDitemukan,
-                                        tanggalDitemukan, status, warna, jenisBarang);
+                            } else if (jenis == 3) {
+                                System.out.print("Jenis Dokumen: ");
+                                String dokumen = input.nextLine();
+                                validasiInput(dokumen);
+
+                                System.out.print("Nama Pemilik: ");
+                                String pemilik = input.nextLine();
+                                validasiInput(pemilik);
+
+                                tambahBarang(new BarangDokumen(
+                                        nama, lokasi, tanggal, 1,
+                                        dokumen, pemilik));
 
                             } else {
-
-                                System.out.print("Masukkan Jenis Dokumen: ");
-                                String jenisDokumen = scanner.nextLine();
-
-                                System.out.print("Masukkan Nama Pemilik: ");
-                                String namaPemilik = scanner.nextLine();
-
-                                daftarBarang[jumlahBarang] = new BarangDokumen(
-                                        namaBarang, lokasiDitemukan,
-                                        tanggalDitemukan, status,
-                                        jenisDokumen, namaPemilik);
+                                System.out.println("Jenis barang tidak tersedia.");
                             }
+                            break;
 
-                            jumlahBarang++;
-                            System.out.println("Barang berhasil ditambahkan.");
+                        case 2:
+                            tampilkanBarang();
+                            break;
 
-                        } else {
-                            System.out.println("Pilihan jenis barang tidak valid.");
-                        }
+                        case 3:
+                            System.out.print("Masukkan nama barang: ");
+                            String cariNama = input.nextLine();
 
-                    } else {
-                        System.out.println("Kapasitas data barang sudah penuh.");
+                            BarangTertinggal hasil = cariBarang(cariNama);
+                            System.out.println("\nBarang ditemukan!");
+                            hasil.tampilkanInfo();
+                            break;
+
+                        case 4:
+                            tampilkanBarang();
+
+                            if (!daftarBarang.isEmpty()) {
+                                System.out.print("Masukkan nomor barang: ");
+                                int nomor = input.nextInt();
+                                input.nextLine();
+
+                                if (nomor >= 1 && nomor <= daftarBarang.size()) {
+                                    BarangTertinggal barang =
+                                            daftarBarang.get(nomor - 1);
+
+                                    jalankanProsesBarang(barang);
+                                } else {
+                                    throw new KoleksiBarangTidakDitemukanException(
+                                            "Nomor barang tidak ditemukan!");
+                                }
+                            }
+                            break;
+
+                        case 5:
+                            menuPetugas();
+                            break;
+
+                        case 6:
+                            System.out.println("Terima kasih telah menggunakan program.");
+                            break;
+
+                        default:
+                            System.out.println("Pilihan menu tidak tersedia.");
                     }
-                    break;
 
-                case 2:
-                    System.out.println("\n=== DAFTAR BARANG TERTINGGAL ===");
+                } catch (InputMismatchException e) {
+                    System.out.println("Error: Input harus berupa angka!");
+                    input.nextLine();
 
-                    if (jumlahBarang == 0) {
-                        System.out.println("Belum ada barang yang tersimpan.");
-                    } else {
-                        for (int i = 0; i < jumlahBarang; i++) {
-                            System.out.println("\nData Barang ke-" + (i + 1));
-                            daftarBarang[i].tampilkanInfo();
-                            System.out.println("----------------------------------------");
-                        }
+                } catch (KoleksiBarangTidakDitemukanException e) {
+                    System.out.println("Error: " + e.getMessage());
 
-                        System.out.println("Total Barang: "
-                                + BarangTertinggal.getJumlahBarang());
-                    }
-                    break;
+                } finally {
+                    System.out.println("Proses menu utama selesai.");
+                }
 
-                case 3:
-                    System.out.println("\n=== CARI BARANG ===");
-                    System.out.println("1. Berdasarkan Nama");
-                    System.out.println("2. Berdasarkan Status");
-                    System.out.print("Pilih: ");
+            } while (pilihan != 6);
 
-                    int modeCari = scanner.nextInt();
-                    scanner.nextLine();
-
-                    if (modeCari == 1) {
-                        System.out.print("Masukkan Nama Barang: ");
-                        String namaCari = scanner.nextLine();
-
-                        cariBarang(namaCari, daftarBarang, jumlahBarang);
-
-                    } else if (modeCari == 2) {
-                        System.out.println("1. Belum Diklaim");
-                        System.out.println("2. Sudah Dikembalikan");
-                        System.out.print("Pilih Status: ");
-
-                        int statusCari = scanner.nextInt();
-                        scanner.nextLine();
-
-                        if (statusCari == 1 || statusCari == 2) {
-                            cariBarang(statusCari, daftarBarang, jumlahBarang);
-                        } else {
-                            System.out.println("Pilihan status tidak valid.");
-                        }
-
-                    } else {
-                        System.out.println("Pilihan tidak valid.");
-                    }
-                    break;
-
-                case 4:
-                    System.out.println("\n=== TANDAI BARANG DIKEMBALIKAN ===");
-                    System.out.print("Masukkan Nama Barang: ");
-
-                    String namaKembali = scanner.nextLine();
-
-                    tandaiDikembalikan(
-                            namaKembali, daftarBarang, jumlahBarang);
-                    break;
-
-                case 5:
-                    System.out.println("\n=== PILIH BARANG UNTUK DIPROSES ===");
-
-                    if (jumlahBarang == 0) {
-                        System.out.println("Belum ada barang yang tersimpan.");
-                    } else {
-                        for (int i = 0; i < jumlahBarang; i++) {
-                            System.out.println((i + 1) + ". "
-                                    + daftarBarang[i].getNamaBarang());
-                        }
-
-                        System.out.print("Pilih nomor barang: ");
-                        int nomorBarang = scanner.nextInt();
-                        scanner.nextLine();
-
-                        if (nomorBarang >= 1 && nomorBarang <= jumlahBarang) {
-                            jalankanProsesBarang(daftarBarang[nomorBarang - 1]);
-                        } else {
-                            System.out.println("Nomor barang tidak valid.");
-                        }
-                    }
-                    break;
-
-                case 6:
-                    System.out.println("Terima kasih telah menggunakan sistem.");
-                    isRunning = false;
-                    break;
-
-                default:
-                    System.out.println("Pilihan tidak valid. Masukkan angka 1-6.");
-            }
+        } finally {
+            System.out.println("Program ditutup. Scanner akan ditutup.");
+            input.close();
         }
-
-        scanner.close();
     }
 }

@@ -1,51 +1,34 @@
 package com.mycompany.sistempendataanbarangtertinggaldilabkomputasidasar;
 
-public class BarangElektronik extends BarangTertinggal implements DapatDikembalikan{
+public class BarangElektronik extends BarangTertinggal
+        implements DapatDikembalikan {
 
     private String merek;
     private String kondisi;
 
     public BarangElektronik(String namaBarang, String lokasiDitemukan,
-                            String tanggalDitemukan, int status,
-                            String merek, String kondisi) {
+            String tanggalDitemukan, int status, String merek, String kondisi) {
+
         super(namaBarang, lokasiDitemukan, tanggalDitemukan, status);
         this.merek = merek;
         this.kondisi = kondisi;
     }
 
-    public String getMerek() {
-        return this.merek;
-    }
-
-    public String getKondisi() {
-        return this.kondisi;
-    }
-
-    public void setMerek(String merek) {
-        this.merek = merek;
-    }
-
-    public void setKondisi(String kondisi) {
-        this.kondisi = kondisi;
-    }
-
     @Override
     public void tampilkanInfo() {
-        System.out.println("=== Barang Elektronik ===");
         super.tampilkanInfo();
-        System.out.println("Merek             : " + this.merek);
-        System.out.println("Kondisi           : " + this.kondisi);
+        System.out.println("Merek           : " + merek);
+        System.out.println("Kondisi         : " + kondisi);
     }
 
     @Override
     public void prosesBarang() {
-        System.out.println("Proses barang elektronik: pemeriksaan merek dan kondisi.");
+        System.out.println("Memproses barang elektronik.");
     }
 
     @Override
     public void prosesPengembalian() {
-        System.out.println("Pengembalian barang elektronik sedang diproses.");
-        this.setStatus(2);
-        System.out.println("Status barang menjadi Sudah Dikembalikan.");
+        setStatus(2);
+        System.out.println("Barang elektronik berhasil dikembalikan.");
     }
 }
