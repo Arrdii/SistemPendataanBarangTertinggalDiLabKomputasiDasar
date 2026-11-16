@@ -15,6 +15,8 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
 
         int pilihan = 0;
 
+        pengelola.muatDataDariFile();
+
         try {
             do {
                 try {
@@ -29,6 +31,9 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
                     System.out.println("5. Kelola Data Petugas");
                     System.out.println("6. Transaksi Penanganan Barang");
                     System.out.println("7. Keluar");
+                    System.out.println("8. Simpan Data");
+                    System.out.println("9. Muat Data");
+                    System.out.println("10. Tampilkan Log Aktivitas");
                     System.out.print("Pilih menu: ");
 
                     pilihan = input.nextInt();
@@ -73,6 +78,18 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
                                     "Terima kasih telah menggunakan program.");
                             break;
 
+                        case 8:
+                            pengelola.simpanDataKeFile();
+                            break;
+
+                        case 9:
+                            pengelola.muatDataDariFile();
+                            break;
+
+                        case 10:
+                            pengelola.bacaLogAktivitas();
+                            break;
+
                         default:
                             System.out.println(
                                     "Pilihan menu tidak tersedia.");
@@ -93,6 +110,8 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
             } while (pilihan != 7);
 
         } finally {
+            System.out.println("\nMenyimpan data sebelum program ditutup...");
+            pengelola.simpanDataKeFile();
             System.out.println("Program ditutup.");
             input.close();
         }
@@ -277,5 +296,10 @@ public class SistemPendataanBarangTertinggalDiLabKomputasiDasar {
         BarangTertinggal barang = pengelola.getBarang(nomor);
 
         transaksi.prosesPenanganan(petugas, barang);
+        pengelola.catatAktivitas("Transaksi penanganan barang: "
+                + barang.getNamaBarang() + " oleh petugas "
+                + petugas.getNama() + ". Status akhir: "
+                + (barang.getStatus() == 1
+                        ? "Belum Diklaim" : "Sudah Dikembalikan"));
     }
 }

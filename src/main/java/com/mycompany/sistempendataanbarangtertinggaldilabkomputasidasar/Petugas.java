@@ -1,6 +1,10 @@
 package com.mycompany.sistempendataanbarangtertinggaldilabkomputasidasar;
 
-public class Petugas {
+import java.io.Serializable;
+
+public class Petugas implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String nip;
     private String nama;

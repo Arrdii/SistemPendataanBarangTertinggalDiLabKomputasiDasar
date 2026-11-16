@@ -1,6 +1,10 @@
 package com.mycompany.sistempendataanbarangtertinggaldilabkomputasidasar;
 
-public class RuangPenyimpanan {
+import java.io.Serializable;
+
+public class RuangPenyimpanan implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String namaRuang;
     private int kapasitas;

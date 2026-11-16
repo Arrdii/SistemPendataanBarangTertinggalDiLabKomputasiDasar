@@ -1,6 +1,7 @@
 package com.mycompany.sistempendataanbarangtertinggaldilabkomputasidasar;
 
 public class TransaksiPenanganan {
+
     public void prosesPenanganan(
             Petugas petugas, BarangTertinggal barang) {
 
@@ -13,11 +14,8 @@ public class TransaksiPenanganan {
         barang.prosesBarang();
 
         if (barang instanceof DapatDikembalikan) {
-            DapatDikembalikan data =
-                    (DapatDikembalikan) barang;
-
+            DapatDikembalikan data = (DapatDikembalikan) barang;
             data.prosesPengembalian();
-
             System.out.println(
                     "Status transaksi: Barang berhasil dikembalikan.");
         } else {
@@ -26,9 +24,7 @@ public class TransaksiPenanganan {
         }
 
         if (barang instanceof DapatDiverifikasi) {
-            DapatDiverifikasi data =
-                    (DapatDiverifikasi) barang;
-
+            DapatDiverifikasi data = (DapatDiverifikasi) barang;
             data.verifikasiBarang();
         }
 
